@@ -2,6 +2,7 @@ package com.example.tominaga.qiita_client_d3
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -33,6 +34,8 @@ class ListActivity : Activity() {
 
         val editText = findViewById<EditText>(R.id.edit_text) as EditText
         editText.setOnKeyListener(OnKeyListener())
+
+        listView.onItemClickListener = OnItemClickListener()
     }
 
     private inner class ListAdapter(context: Context, resource: Int) : ArrayAdapter<Item>(context, resource) {
@@ -97,6 +100,17 @@ class ListActivity : Activity() {
                 request.enqueue(item)
             }
             return true
+        }
+    }
+
+
+    private inner class OnItemClickListener : AdapterView.OnItemClickListener {
+        override fun onItemClick(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val intent = Intent(this@ListActivity, DetailActivity::class.java)
+            // タップされた行番号のデータを取り出す
+            val result = mAdapter.getItem(position)
+            intent.putExtra("url", result.url)
+            startActivity(intent)
         }
     }
 }
